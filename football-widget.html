@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Arial Black', Arial, sans-serif;
+    background: linear-gradient(180deg, #ffffff 0%, #ffffff 90%, #2d5a1b 90%);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+  }
+
+  /* ── GRASS FIELD ── */
+  .field {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    background: repeating-linear-gradient(
+      90deg,
+      #2d6b1a 0px, #2d6b1a 60px,
+      #348020 60px, #348020 120px
+    );
+    border-top: 3px solid rgba(255,255,255,0.2);
+  }
+
+  /* ── SCENE ── */
+  .scene {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    perspective: 900px;
+  }
+
+  /* ── INSTRUCTION TEXT ── */
+  #instruction {
+    position: absolute;
+    left: 12%;
+    top: 38%;
+    color: #1a1a1a;
+    font-size: clamp(14px, 2.2vw, 22px);
+    font-weight: 900;
+    line-height: 1.5;
+    text-shadow: none;
+    transition: opacity 0.4s;
+    max-width: 280px;
+  }
+
+  #instruction .brand {
+    color: #FFD700;
+  }
+
+  /* ── BOUNCE ARROW ── */
+  #arrow {
+    position: absolute;
+    left: calc(12% + 45px);
+    top: 50%;
+    z-index: 25;
+    font-size: 28px;
+    color: #FFD700;
+    animation: bounce 0.9s ease-in-out infinite;
+    transition: opacity 0.4s;
+    text-shadow: none;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(10px); }
+  }
+
+  /* ── BALL ── */
+  #ball {
+    position: absolute;
+    left: 12%;
+    bottom: 10%;
+    width: clamp(70px, 9vw, 110px);
+    height: clamp(70px, 9vw, 110px);
+    font-size: clamp(65px, 8.5vw, 105px);
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.7));
+    transition: filter 0.2s;
+    transform-origin: center center;
+    z-index: 20;
+  }
+
+  #ball:hover {
+    filter: drop-shadow(0 8px 30px rgba(255,165,0,0.6)) drop-shadow(0 0 15px rgba(255,200,0,0.4));
+    animation: pulse 0.6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.06); }
+  }
+
+  /* ── UNILEVER TARGET ── */
+  #target {
+    position: absolute;
+    right: 12%;
+    top: 18%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.3s;
+  }
+
+  #target img {
+    width: clamp(143px, 16.5vw, 220px);
+    filter: none;
+  }
+
+  .target-label {
+    color: rgba(255,255,255,0.5);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── IMPACT ── */
+  #impact {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    display: none;
+    pointer-events: none;
+    z-index: 30;
+    transform-origin: center center;
+  }
+
+  #impact.show {
+    display: block;
+    animation: impact-pop 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards;
+  }
+
+  @keyframes impact-pop {
+    0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+    65%  { transform: scale(1.2) rotate(6deg);  opacity: 1; }
+    100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+  }
+
+  /* ── RESET FADE ── */
+  .fade-out { opacity: 0 !important; pointer-events: none; }
+  .fade-in  { opacity: 1 !important; }
+</style>
+</head>
+<body>
+
+<div class="field"></div>
+
+<div class="scene">
+
+  <!-- Instruction -->
+  <div id="instruction">
+    Click the ball to give<br>
+    <span class="brand">Unilever</span> a hit!
+  </div>
+
+  <!-- Bounce arrow -->
+  <div id="arrow">↓</div>
+
+  <!-- Football -->
+  <div id="ball" onclick="kickBall()" title="Click to kick!">⚽</div>
+
+  <!-- Unilever logo (target) -->
+  <div id="target">
+    <img
+      id="unileverLogo"
+      src="https://static.wixstatic.com/media/ed671b_9a85bb9d7556457f813dc181c0d800c5~mv2.png"
+      alt="Unilever"
+      style="width:clamp(143px,16.5vw,220px);display:none;"
+      onload="this.style.display='block';document.getElementById('logoFallback').style.display='none';"
+    >
+    <div id="logoFallback" style="font-size:clamp(32px,5vw,56px);font-weight:900;color:#1a1a8c;font-family:'Arial Black',Arial,sans-serif;letter-spacing:3px;">UNILEVER</div>
+    <div class="target-label">target</div>
+  </div>
+
+  <!-- Comic impact -->
+  <div id="impact">
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- Triangular shards radiating from centre -->
+      <polygon points="60,60 52,2  68,2"   fill="#FF6B00"/>
+      <polygon points="60,60 88,8  108,28" fill="#FFD700"/>
+      <polygon points="60,60 118,52 118,68" fill="#FF6B00"/>
+      <polygon points="60,60 108,92 88,112" fill="#FFD700"/>
+      <polygon points="60,60 68,118 52,118" fill="#FF6B00"/>
+      <polygon points="60,60 32,112 12,92"  fill="#FFD700"/>
+      <polygon points="60,60 2,68  2,52"    fill="#FF6B00"/>
+      <polygon points="60,60 12,28  32,8"   fill="#FFD700"/>
+      <!-- Thin spike accents -->
+      <polygon points="60,60 56,30 64,30"  fill="#FF6B00" opacity="0.7"/>
+      <polygon points="60,60 90,56 90,64"  fill="#FF6B00" opacity="0.7"/>
+      <polygon points="60,60 64,90 56,90"  fill="#FF6B00" opacity="0.7"/>
+      <polygon points="60,60 30,64 30,56"  fill="#FF6B00" opacity="0.7"/>
+      <!-- White centre circle -->
+      <circle cx="60" cy="60" r="24" fill="white" stroke="#FF6B00" stroke-width="2"/>
+      <text x="60" y="65" text-anchor="middle"
+        font-family="Arial Black, sans-serif" font-size="14" font-weight="900"
+        fill="#FF6B00">POW!</text>
+    </svg>
+  </div>
+
+</div><!-- /scene -->
+
+<script>
+  let isAnimating = false;
+
+  function kickBall() {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    // Notify Wix Velo page to increment the counter
+    try { window.parent.postMessage({ type: 'ball-clicked' }, '*'); } catch(e) {}
+
+    const ball       = document.getElementById('ball');
+    const target     = document.getElementById('target');
+    const impact     = document.getElementById('impact');
+    const instruction = document.getElementById('instruction');
+    const arrow      = document.getElementById('arrow');
+
+    // Disable hover animation during flight
+    ball.style.animation = 'none';
+    ball.style.cursor    = 'default';
+
+    // Fade UI text
+    instruction.classList.add('fade-out');
+    arrow.classList.add('fade-out');
+
+    // Measure positions for JS-driven animation
+    const ballRect   = ball.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+
+    const startX = ballRect.left + ballRect.width  / 2;
+    const startY = ballRect.top  + ballRect.height / 2;
+    const endX   = targetRect.left + targetRect.width  / 2;
+    const endY   = targetRect.top  + targetRect.height / 2;
+
+    const dx = endX - startX;
+    const dy = endY - startY;
+
+    // Animate via Web Animations API: arc trajectory + shrink (perspective)
+    const ballAnim = ball.animate([
+      { transform: 'translate(0px, 0px)    scale(1)    rotate(0deg)',    offset: 0    },
+      { transform: `translate(${dx*0.45}px, ${dy*0.45 - 90}px) scale(0.65) rotate(380deg)`, offset: 0.5  },
+      { transform: `translate(${dx}px,      ${dy}px)            scale(0.28) rotate(720deg)`, offset: 1    },
+    ], {
+      duration: 750,
+      easing: 'ease-in',
+      fill: 'forwards'
+    });
+
+    // Show impact burst + launch logo when ball arrives
+    ballAnim.onfinish = () => {
+      // Position impact centred on the target
+      const tr = target.getBoundingClientRect();
+      const scene = document.querySelector('.scene').getBoundingClientRect();
+      const cx = tr.left + tr.width  / 2 - scene.left;
+      const cy = tr.top  + tr.height / 2 - scene.top;
+      impact.style.left = (cx - 60) + 'px';
+      impact.style.top  = (cy - 60) + 'px';
+      impact.classList.add('show');
+
+      // Logo flies off — upward and to the right, spinning and fading
+      target.animate([
+        { transform: 'translate(0px, 0px)   rotate(0deg)   scale(1)',    opacity: 1, offset: 0    },
+        { transform: 'translate(60px, -40px) rotate(180deg) scale(1.1)', opacity: 1, offset: 0.15 },
+        { transform: 'translate(220px, -280px) rotate(540deg) scale(0.6)', opacity: 0.4, offset: 0.7  },
+        { transform: 'translate(350px, -420px) rotate(900deg) scale(0.2)', opacity: 0,   offset: 1    },
+      ], {
+        duration: 1000,
+        easing: 'ease-in',
+        fill: 'forwards',
+        delay: 80
+      });
+    };
+
+    // Reset everything after 3 seconds of impact display
+    setTimeout(() => {
+      impact.classList.remove('show');
+      ball.getAnimations().forEach(a => a.cancel());
+      target.getAnimations().forEach(a => a.cancel());
+      ball.style.animation   = '';
+      ball.style.cursor      = 'pointer';
+      target.style.opacity   = '1';
+      instruction.classList.remove('fade-out');
+      arrow.classList.remove('fade-out');
+      isAnimating = false;
+    }, 750 + 3000);
+  }
+</script>
+</body>
+</html>

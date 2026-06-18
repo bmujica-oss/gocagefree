@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go Cage Free — Pressure Unilever</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ─── RESET & BASE ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --black:   #0a0a0a;
+  --white:   #ffffff;
+  --yellow:  #FFD700;
+  --orange:  #FF6B00;
+  --muted:   #666666;
+  --light:   #f5f5f5;
+  --font:    'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  color: var(--black);
+  background: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 3rem;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  color: var(--black);
+}
+
+.nav-brand img {
+  height: 28px;
+  width: auto;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--black); }
+
+/* ─── SECTION BASE ─── */
+section { width: 100%; }
+
+/* ─── SECTION 1: HERO ─── */
+#hero {
+  min-height: 100vh;
+  padding: 7rem 3rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  text-align: center;
+}
+
+.hero-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.04em;
+  color: var(--black);
+  max-width: 900px;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title em {
+  font-style: normal;
+  color: var(--orange);
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 400;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+
+/* ─── UNIFIED WIDGET + COUNTER MODULE ─── */
+#widget-area {
+  width: 100%;
+  max-width: 960px;
+  background: #060f1c;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.07), 0 40px 100px rgba(0,0,0,0.5);
+}
+
+/* ── STADIUM GAME FIELD ── */
+#game-field {
+  position: relative;
+  height: 420px;
+  background: linear-gradient(180deg, #081524 0%, #0c1f38 55%, #0a1a2c 100%);
+  overflow: hidden;
+}
+
+/* Stadium arc-light glow from above */
+#game-field::before {
+  content: '';
+  position: absolute;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  width: 120%; height: 480px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(60,110,220,0.22) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── GRASS ── */
+#grass {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 11%;
+  background: repeating-linear-gradient(
+    90deg,
+    #1a4d0f 0px, #1a4d0f 60px,
+    #1e5812 60px, #1e5812 120px
+  );
+  border-top: 2px solid rgba(255,255,255,0.12);
+  z-index: 1;
+}
+
+/* ── SCOREBOARD PANEL ── */
+#scoreboard {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 82%;
+  background: rgba(4, 12, 26, 0.88);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 5;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.sb-header {
+  background: var(--yellow);
+  text-align: center;
+  padding: 7px 0 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: #080f1a;
+  text-transform: uppercase;
+}
+
+.sb-row {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 70px;
+  gap: 14px;
+}
+
+.sb-row + .sb-row {
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.sb-emblem {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.sb-team {
+  flex: 1;
+  font-size: clamp(13px, 1.9vw, 21px);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.sb-sep {
+  width: 2px;
+  height: 36px;
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+
+.sb-score {
+  font-size: clamp(22px, 3.8vw, 40px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.35);
+  min-width: 64px;
+  text-align: right;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.sb-score--active {
+  color: var(--yellow);
+  text-shadow: 0 0 20px rgba(255,215,0,0.4);
+}
+
+/* ── COUNTER BAR ── */
+#counter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1.25rem 2.5rem;
+  background: #060f1c;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  flex-wrap: wrap;
+}
+
+.cbar-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+
+.cbar-number {
+  font-size: clamp(1.6rem, 4vw, 2.75rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--yellow);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cbar-suffix {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.28);
+  letter-spacing: 0.05em;
+}
+
+/* ── INSTRUCTION ── */
+#instruction {
+  position: absolute;
+  left: 7%;
+  top: 38%;
+  font-family: var(--font);
+  font-size: clamp(12px, 1.5vw, 16px);
+  font-weight: 700;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.65);
+  transition: opacity 0.4s;
+  pointer-events: none;
+  z-index: 5;
+  letter-spacing: 0.02em;
+}
+
+#instruction .brand { color: var(--yellow); }
+
+/* ── ARROW ── */
+#arrow {
+  position: absolute;
+  left: calc(7% + 36px);
+  top: 52%;
+  font-size: 20px;
+  color: var(--yellow);
+  animation: bounce 0.9s ease-in-out infinite;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  z-index: 5;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+/* ── BALL ── */
+#ball {
+  position: absolute;
+  left: 7%;
+  bottom: 11%;
+  font-size: clamp(56px, 6.5vw, 82px);
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.8));
+  transition: filter 0.2s;
+  transform-origin: center center;
+  z-index: 10;
+}
+
+#ball:hover {
+  filter: drop-shadow(0 6px 24px rgba(255,200,0,0.7)) drop-shadow(0 0 8px rgba(255,200,0,0.3));
+  animation: pulse 0.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.07); }
+}
+
+/* ── UNILEVER TARGET ── */
+#target {
+  position: absolute;
+  right: 9%;
+  top: 28%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.3s;
+  z-index: 6;
+}
+
+#target img {
+  width: clamp(100px, 12vw, 160px);
+  filter: brightness(0) invert(1) opacity(0.85);
+}
+
+.target-label {
+  font-size: 8px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  font-family: var(--font);
+}
+
+/* ── IMPACT ── */
+#impact {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  display: none;
+  pointer-events: none;
+  z-index: 30;
+  transform-origin: center center;
+}
+
+#impact.show {
+  display: block;
+  animation: impact-pop 0.3s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards;
+}
+
+@keyframes impact-pop {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  65%  { transform: scale(1.2) rotate(6deg);  opacity: 1; }
+  100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
+
+.fade-out { opacity: 0 !important; pointer-events: none; }
+
+
+/* ─── SECTION 3: CAMPAIGN INFO ─── */
+#info {
+  background: var(--white);
+  padding: 4rem 3rem;
+}
+
+.info-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.info-heading {
+  font-size: clamp(1.75rem, 3.5vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--black);
+  position: sticky;
+  top: 7rem;
+}
+
+.info-heading em {
+  font-style: normal;
+  color: var(--orange);
+}
+
+.info-body { display: flex; flex-direction: column; gap: 1rem; }
+
+.info-body p {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #333;
+}
+
+.info-pull {
+  border-left: 3px solid var(--yellow);
+  padding-left: 1.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--black);
+  line-height: 1.5;
+}
+
+.info-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--orange);
+  border: 1.5px solid var(--orange);
+  padding: 0.35rem 0.8rem;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+}
+
+/* ─── SECTION 4: CHATBOT ─── */
+#chatbot {
+  background: var(--black);
+  padding: 4rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#chatbot::before {
+  content: '';
+  position: absolute;
+  top: -200px; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.chatbot-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 0.75rem;
+}
+
+.chatbot-title {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  line-height: 1.1;
+  max-width: 600px;
+  margin: 0 auto 1rem;
+}
+
+.chatbot-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 2rem;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.chatbot-cta-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--yellow);
+  color: var(--black);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 100px;
+  margin-bottom: 2rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+.chatbot-cta-bubble .icon { font-size: 1.25rem; }
+
+/* ─── SECTION 5: NEWSLETTER ─── */
+#newsletter {
+  background: var(--light);
+  padding: 4rem 3rem;
+  text-align: center;
+}
+
+.nl-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.nl-title {
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--black);
+  margin-bottom: 0.5rem;
+}
+
+.nl-sub {
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 1.75rem;
+  line-height: 1.6;
+}
+
+.nl-form {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.nl-input {
+  flex: 1;
+  padding: 0.9rem 1.25rem;
+  font-size: 1rem;
+  font-family: var(--font);
+  border: 1.5px solid rgba(0,0,0,0.15);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--black);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.nl-input:focus { border-color: var(--black); }
+.nl-input::placeholder { color: #aaa; }
+
+.nl-btn {
+  padding: 0.9rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font);
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.nl-btn:hover { background: #222; }
+.nl-btn:active { transform: scale(0.97); }
+
+.nl-note {
+  font-size: 0.8125rem;
+  color: #aaa;
+  margin-top: 1rem;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--black);
+  padding: 2.5rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.footer-brand {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.footer-brand span { color: var(--white); }
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.footer-links a {
+  font-size: 0.8125rem;
+  color: rgba(255,255,255,0.4);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: rgba(255,255,255,0.8); }
+
+.footer-copy {
+  font-size: 0.8125rem;
+  color: rgba(255,255,255,0.25);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+
+  #hero { padding: 6rem 1.5rem 2rem; }
+  #widget-area { height: 340px; }
+
+  .info-inner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .info-heading { position: static; font-size: 2rem; }
+
+  #info, #chatbot, #newsletter { padding: 3rem 1.5rem; }
+
+  .nl-form { flex-direction: column; }
+
+  footer {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+
+  .footer-links { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a class="nav-brand" href="#">Sinergia Animal</a>
+  <ul class="nav-links">
+    <li><a href="#info">The Campaign</a></li>
+    <li><a href="#chatbot">Take Action</a></li>
+    <li><a href="#newsletter">Stay Updated</a></li>
+  </ul>
+</nav>
+
+<!-- ─── SECTION 1: HERO + FOOTBALL WIDGET ─── -->
+<section id="hero">
+  <p class="hero-eyebrow">Global Cage-Free Campaign</p>
+  <h1 class="hero-title">Unilever's World Cup:<br><em>Rigged by Design</em></h1>
+  <p class="hero-sub">Unilever promised a cage-free world — then quietly excluded the Global South. Time to send a message.</p>
+
+  <div id="widget-area">
+    <div id="game-field">
+      <!-- Grass -->
+      <div id="grass"></div>
+
+      <!-- Instruction -->
+      <div id="instruction">
+        Click the ⚽ to send<br>
+        <span class="brand">Unilever</span> a message!
+      </div>
+
+      <!-- Arrow -->
+      <div id="arrow">↓</div>
+
+      <!-- Ball -->
+      <div id="ball" onclick="kickBall()" title="Click to kick!" role="button" aria-label="Kick the ball at Unilever">⚽</div>
+
+      <!-- Target (Unilever logo overlay — used for fly-away animation) -->
+      <div id="target">
+        <img
+          src="https://static.wixstatic.com/media/ed671b_9a85bb9d7556457f813dc181c0d800c5~mv2.png"
+          alt="Unilever logo"
+          style="width:clamp(90px,10vw,130px);filter:brightness(0) invert(1);"
+        >
+      </div>
+
+      <!-- Impact -->
+      <div id="impact">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+          <!-- 16 main spikes at 22.5° intervals, alternating orange/yellow, varying lengths -->
+          <polygon points="114,60 60,65 60,55"   fill="#FF6B00"/>
+          <polygon points="95,74 59,64 62,56"    fill="#FFD700"/>
+          <polygon points="97,97 57,64 64,57"    fill="#FF6B00"/>
+          <polygon points="76,99 56,62 64,58"    fill="#FFD700"/>
+          <polygon points="60,116 55,60 65,60"   fill="#FF6B00"/>
+          <polygon points="46,93 56,58 64,62"    fill="#FFD700"/>
+          <polygon points="25,95 57,57 64,64"    fill="#FF6B00"/>
+          <polygon points="23,75 59,56 62,64"    fill="#FFD700"/>
+          <polygon points="6,60 60,55 60,65"     fill="#FF6B00"/>
+          <polygon points="25,46 62,56 59,64"    fill="#FFD700"/>
+          <polygon points="23,23 64,57 57,64"    fill="#FF6B00"/>
+          <polygon points="43,19 64,59 56,62"    fill="#FFD700"/>
+          <polygon points="60,6 65,60 55,60"     fill="#FF6B00"/>
+          <polygon points="75,23 64,62 56,59"    fill="#FFD700"/>
+          <polygon points="97,23 64,64 57,57"    fill="#FF6B00"/>
+          <polygon points="95,46 62,64 59,56"    fill="#FFD700"/>
+          <!-- 8 thinner accent spikes at offset angles -->
+          <polygon points="88,65 59,63 61,57"    fill="#FFD700"/>
+          <polygon points="77,85 58,62 63,58"    fill="#FF6B00"/>
+          <polygon points="55,88 57,59 63,61"    fill="#FFD700"/>
+          <polygon points="34,78 58,58 62,63"    fill="#FF6B00"/>
+          <polygon points="33,55 61,57 59,63"    fill="#FFD700"/>
+          <polygon points="43,35 63,58 58,62"    fill="#FF6B00"/>
+          <polygon points="65,33 63,61 57,59"    fill="#FFD700"/>
+          <polygon points="87,42 62,63 58,58"    fill="#FF6B00"/>
+          <!-- Dark centre to anchor the burst -->
+          <circle cx="60" cy="60" r="8" fill="#a83200"/>
+        </svg>
+      </div>
+    </div><!-- /game-field -->
+
+    <!-- Integrated counter bar -->
+    <div id="counter-bar">
+      <span class="cbar-label">Total hits</span>
+      <span class="cbar-number" id="counterDisplay">—</span>
+      <span class="cbar-suffix">times Unilever has been hit</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 3: CAMPAIGN INFO ─── -->
+<section id="info">
+  <div class="info-inner">
+    <div>
+      <span class="info-tag">The Campaign</span>
+      <h2 class="info-heading">Unilever broke its<br>promise to <em>the world</em></h2>
+    </div>
+    <div class="info-body">
+      <p class="info-pull">Billions of hens in the Global South still suffer in battery cages. Unilever chose to forget them.</p>
+      <p>Unilever announced a global cage-free egg sourcing policy. Recently they decided to leave "emerging markets" out of their policy. They have excluded the Global South — the regions where the vast majority of caged hens actually live.</p>
+      <p>Sinergia Animal is one of the leading animal protection organizations in Latin America and Southeast Asia. Together with other organizations, we are mounting a sustained campaign to pressure Unilever to close this loophole and deliver a truly global cage-free commitment — one that includes every country in which it operates.</p>
+      <p>Every click above, every message to our bot, every signature sends a real signal to Unilever's decision makers. Join thousands of people already taking action.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 4: CHATBOT ─── -->
+<section id="chatbot">
+  <p class="chatbot-eyebrow">Take Action Now</p>
+  <h2 class="chatbot-title">Do you have a minute to do more for animals?</h2>
+  <p class="chatbot-sub">Our action bot is ready. Message it in any language — it will guide you through a powerful action that takes less than 2 minutes.</p>
+  <div class="chatbot-cta-bubble">
+    <span class="icon">🐔</span>
+    Message me in any language!
+  </div>
+
+  <!-- Botpress embed -->
+  <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/05/07/16/20260507163104-W3D57HJM.js" defer></script>
+</section>
+
+<!-- ─── SECTION 5: NEWSLETTER ─── -->
+<section id="newsletter">
+  <p class="nl-eyebrow">Stay in the Loop</p>
+  <h2 class="nl-title">Join our newsletter</h2>
+  <p class="nl-sub">Receive campaign updates, victories, and ways to take action — straight to your inbox.</p>
+  <form class="nl-form" onsubmit="handleSubscribe(event)">
+    <input
+      class="nl-input"
+      type="email"
+      placeholder="your@email.com"
+      required
+      aria-label="Email address"
+      id="emailInput"
+    >
+    <button class="nl-btn" type="submit">Subscribe</button>
+  </form>
+  <p class="nl-note" id="nl-msg">No spam. Unsubscribe anytime.</p>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-brand">Sinergia<span>Animal</span> International</div>
+  <ul class="footer-links">
+    <li><a href="https://www.sinergiaanimalinternational.org/" target="_blank">Our Website</a></li>
+    <li><a href="#info">Campaign</a></li>
+    <li><a href="#newsletter">Newsletter</a></li>
+  </ul>
+  <p class="footer-copy">© 2026 Sinergia Animal</p>
+</footer>
+
+<!-- ─── SCRIPTS ─── -->
+<script>
+/* ── COUNTER API ── */
+const NS  = 'sinergiaanimal-org';
+const KEY = 'unilever-hits';
+
+async function loadCount() {
+  try {
+    const r = await fetch(`https://api.countapi.xyz/get/${NS}/${KEY}`);
+    const d = await r.json();
+    animateCount(d.value || 0);
+  } catch(e) {
+    document.getElementById('counterDisplay').textContent = '—';
+  }
+}
+
+async function incrementCount() {
+  try {
+    const r = await fetch(`https://api.countapi.xyz/hit/${NS}/${KEY}`);
+    const d = await r.json();
+    animateCount(d.value || 0);
+  } catch(e) {}
+}
+
+function animateCount(target) {
+  const el = document.getElementById('counterDisplay');
+  const start = parseInt(el.textContent.replace(/,/g,'')) || 0;
+  const diff  = target - start;
+  const dur   = 1000;
+  const steps = 40;
+  let i = 0;
+  const timer = setInterval(() => {
+    i++;
+    const val = Math.round(start + diff * (i / steps));
+    el.textContent = val.toLocaleString('en-US');
+    if (i >= steps) clearInterval(timer);
+  }, dur / steps);
+}
+
+loadCount();
+
+/* ── FOOTBALL WIDGET ── */
+let isAnimating = false;
+
+function kickBall() {
+  if (isAnimating) return;
+  isAnimating = true;
+
+  incrementCount();
+
+  const ball        = document.getElementById('ball');
+  const target      = document.getElementById('target');
+  const impact      = document.getElementById('impact');
+  const instruction = document.getElementById('instruction');
+  const arrow       = document.getElementById('arrow');
+  const area        = document.getElementById('game-field');
+
+  ball.style.animation = 'none';
+  ball.style.cursor    = 'default';
+  instruction.classList.add('fade-out');
+  arrow.classList.add('fade-out');
+
+  const ballRect   = ball.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+
+  const dx = (targetRect.left + targetRect.width / 2)  - (ballRect.left + ballRect.width / 2);
+  const dy = (targetRect.top  + targetRect.height / 2) - (ballRect.top  + ballRect.height / 2);
+
+  const anim = ball.animate([
+    { transform: 'translate(0,0) scale(1) rotate(0deg)',                                  offset: 0   },
+    { transform: `translate(${dx*.45}px,${dy*.45-80}px) scale(0.65) rotate(380deg)`,     offset: 0.5 },
+    { transform: `translate(${dx}px,${dy}px)             scale(0.28) rotate(720deg)`,     offset: 1   },
+  ], { duration: 750, easing: 'ease-in', fill: 'forwards' });
+
+  anim.onfinish = () => {
+    const tr    = target.getBoundingClientRect();
+    const ar    = area.getBoundingClientRect();
+    const cx    = tr.left + tr.width  / 2 - ar.left;
+    const cy    = tr.top  + tr.height / 2 - ar.top;
+    impact.style.left = (cx - 60) + 'px';
+    impact.style.top  = (cy - 60) + 'px';
+    impact.classList.add('show');
+
+    target.animate([
+      { transform: 'translate(0,0) rotate(0deg) scale(1)',          opacity: 1, offset: 0    },
+      { transform: 'translate(60px,-40px) rotate(180deg) scale(1.1)', opacity: 1, offset: 0.15 },
+      { transform: 'translate(220px,-280px) rotate(540deg) scale(0.6)', opacity: 0.4, offset: 0.7  },
+      { transform: 'translate(350px,-420px) rotate(900deg) scale(0.2)', opacity: 0,   offset: 1    },
+    ], { duration: 1000, easing: 'ease-in', fill: 'forwards', delay: 80 });
+  };
+
+  setTimeout(() => {
+    impact.classList.remove('show');
+    ball.getAnimations().forEach(a => a.cancel());
+    target.getAnimations().forEach(a => a.cancel());
+    ball.style.animation = '';
+    ball.style.cursor    = 'pointer';
+    target.style.opacity = '1';
+    instruction.classList.remove('fade-out');
+    arrow.classList.remove('fade-out');
+    isAnimating = false;
+  }, 750 + 3000);
+}
+
+/* ── NEWSLETTER ── */
+function handleSubscribe(e) {
+  e.preventDefault();
+  const email = document.getElementById('emailInput').value;
+  const msg   = document.getElementById('nl-msg');
+  // TODO: connect to your email provider (Mailchimp, Wix Forms, etc.)
+  msg.textContent = '✓ You\'re subscribed! Thanks for joining.';
+  msg.style.color = '#22a36a';
+  document.getElementById('emailInput').value = '';
+}
+</script>
+
+</body>
+</html>

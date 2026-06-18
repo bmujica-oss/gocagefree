@@ -788,9 +788,6 @@ footer {
     Message me in any language!
   </div>
 
-  <!-- Botpress embed -->
-  <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
-  <script src="https://files.bpcontent.cloud/2026/05/07/16/20260507163104-W3D57HJM.js" defer></script>
 </section>
 
 <!-- ─── SECTION 5: NEWSLETTER ─── -->
@@ -825,15 +822,18 @@ footer {
 
 <!-- ─── SCRIPTS ─── -->
 <script>
-/* ── COUNTER API ── */
-const NS  = 'sinergiaanimal-org';
-const KEY = 'unilever-hits';
+/* ── COUNTER (Upstash Redis) ── */
+const UPSTASH_URL   = 'https://prime-koala-129289.upstash.io';
+const UPSTASH_TOKEN = 'gQAAAAAAAfkJAAIgcDEwYzFlYjVlOGY4N2Q0ODkxOWUwYjRmMDRiNmYyOGViNw';
+const COUNTER_KEY   = 'unilever-hits';
+
+const upstashHeaders = { Authorization: `Bearer ${UPSTASH_TOKEN}` };
 
 async function loadCount() {
   try {
-    const r = await fetch(`https://api.countapi.xyz/get/${NS}/${KEY}`);
+    const r = await fetch(`${UPSTASH_URL}/get/${COUNTER_KEY}`, { headers: upstashHeaders });
     const d = await r.json();
-    animateCount(d.value || 0);
+    animateCount(parseInt(d.result) || 0);
   } catch(e) {
     document.getElementById('counterDisplay').textContent = '—';
   }
@@ -841,9 +841,12 @@ async function loadCount() {
 
 async function incrementCount() {
   try {
-    const r = await fetch(`https://api.countapi.xyz/hit/${NS}/${KEY}`);
+    const r = await fetch(`${UPSTASH_URL}/incr/${COUNTER_KEY}`, {
+      method: 'POST',
+      headers: upstashHeaders
+    });
     const d = await r.json();
-    animateCount(d.value || 0);
+    animateCount(d.result || 0);
   } catch(e) {}
 }
 
@@ -939,5 +942,8 @@ function handleSubscribe(e) {
 }
 </script>
 
+<!-- ─── BOTPRESS ─── -->
+<script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/05/07/16/20260507163104-W3D57HJM.js"></script>
 </body>
 </html>

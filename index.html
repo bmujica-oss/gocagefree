@@ -508,26 +508,21 @@ section { width: 100%; }
   line-height: 1.6;
 }
 
-.chatbot-cta-bubble {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: var(--yellow);
-  color: var(--black);
+.chatbot-cta-link {
+  display: inline-block;
+  font-size: 1.125rem;
   font-weight: 700;
-  font-size: 1rem;
-  padding: 0.85rem 1.5rem;
-  border-radius: 100px;
+  color: var(--yellow);
+  letter-spacing: 0.02em;
+  cursor: pointer;
   margin-bottom: 2rem;
-  animation: float 3s ease-in-out infinite;
+  transition: opacity 0.2s, letter-spacing 0.2s;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-6px); }
+.chatbot-cta-link:hover {
+  opacity: 0.75;
+  letter-spacing: 0.06em;
 }
-
-.chatbot-cta-bubble .icon { font-size: 1.25rem; }
 
 /* ─── SECTION 5: NEWSLETTER ─── */
 #newsletter {
@@ -783,9 +778,8 @@ footer {
   <p class="chatbot-eyebrow">Take Action Now</p>
   <h2 class="chatbot-title">Do you have a minute to do more for animals?</h2>
   <p class="chatbot-sub">Our action bot is ready. Message it in any language — it will guide you through a powerful action that takes less than 2 minutes.</p>
-  <div class="chatbot-cta-bubble">
-    <span class="icon">🐔</span>
-    Message me in any language!
+  <div class="chatbot-cta-link" onclick="if(window.botpress) window.botpress.open()">
+    Message me in any language &nbsp;→
   </div>
 
 </section>
@@ -945,5 +939,12 @@ function handleSubscribe(e) {
 <!-- ─── BOTPRESS ─── -->
 <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/05/07/16/20260507163104-W3D57HJM.js"></script>
+<script>
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      if (window.botpress && window.botpress.open) window.botpress.open();
+    }, 3000);
+  });
+</script>
 </body>
 </html>

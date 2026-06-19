@@ -936,14 +936,36 @@ function kickBall() {
 }
 
 /* ── NEWSLETTER ── */
-function handleSubscribe(e) {
+async function handleSubscribe(e) {
   e.preventDefault();
   const email = document.getElementById('emailInput').value;
   const msg   = document.getElementById('nl-msg');
-  // TODO: connect to your email provider (Mailchimp, Wix Forms, etc.)
-  msg.textContent = '✓ You\'re subscribed! Thanks for joining.';
-  msg.style.color = '#22a36a';
-  document.getElementById('emailInput').value = '';
+  const btn   = document.querySelector('.nl-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  try {
+    const r = await fetch('https://formspree.io/f/xlgkqjqw', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    if (r.ok) {
+      msg.textContent = '✓ You\'re subscribed! Thanks for joining.';
+      msg.style.color = '#22a36a';
+      document.getElementById('emailInput').value = '';
+      btn.textContent = 'Done!';
+    } else {
+      msg.textContent = 'Something went wrong. Please try again.';
+      msg.style.color = '#e53e3e';
+      btn.disabled = false;
+      btn.textContent = 'Subscribe';
+    }
+  } catch(err) {
+    msg.textContent = 'Something went wrong. Please try again.';
+    msg.style.color = '#e53e3e';
+    btn.disabled = false;
+    btn.textContent = 'Subscribe';
+  }
 }
 </script>
 

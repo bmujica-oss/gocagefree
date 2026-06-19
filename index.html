@@ -814,6 +814,15 @@ footer {
   <p class="footer-copy">© 2026 Sinergia Animal</p>
 </footer>
 
+<!-- ─── PROACTIVE CHAT BUBBLE ─── -->
+<div id="proactive-bubble" onclick="openBot()" style="display:none;position:fixed;bottom:88px;right:20px;z-index:9999;flex-direction:column;align-items:flex-end;gap:6px;cursor:pointer;">
+  <div style="background:#fff;color:#0a0a0a;font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:600;line-height:1.4;padding:12px 16px;border-radius:16px 16px 4px 16px;box-shadow:0 4px 24px rgba(0,0,0,0.15);max-width:220px;position:relative;">
+    Have a minute to act? Chat with me! 🐔
+    <button onclick="event.stopPropagation();dismissBubble()" style="position:absolute;top:6px;right:8px;background:none;border:none;font-size:14px;color:#999;cursor:pointer;line-height:1;padding:0;">×</button>
+  </div>
+  <div style="width:10px;height:10px;background:#fff;clip-path:polygon(0 0,100% 0,100% 100%);margin-right:28px;box-shadow:2px 2px 4px rgba(0,0,0,0.08);"></div>
+</div>
+
 <!-- ─── SCRIPTS ─── -->
 <script>
 /* ── COUNTER (Upstash Redis) ── */
@@ -942,9 +951,19 @@ function handleSubscribe(e) {
 <script>
   window.addEventListener('load', function() {
     setTimeout(function() {
-      if (window.botpress && window.botpress.open) window.botpress.open();
+      var bubble = document.getElementById('proactive-bubble');
+      if (bubble) bubble.style.display = 'flex';
     }, 3000);
   });
+
+  function openBot() {
+    document.getElementById('proactive-bubble').style.display = 'none';
+    if (window.botpress && window.botpress.open) window.botpress.open();
+  }
+
+  function dismissBubble() {
+    document.getElementById('proactive-bubble').style.display = 'none';
+  }
 </script>
 </body>
 </html>
